@@ -1,0 +1,26 @@
+﻿/* 
+ * Features:
+ * - Track Current Followers - DONE
+ * - Track New Followers for current stream - DONE
+ * - User join message - DONE
+ * - Sign off message for stream end (MAYBE)
+ * - Allow ASCII toggle
+ * - Allow Links toggle - DONE
+ * - Follower greet toggle - DONE
+ * - Maybe a trusted mode toggle? (MAYBE)
+ * - Custom Commands with output - DONE - TODO: Make it more complex
+ * Commands:
+ * - uptime - DONE
+ * - commands - DONE
+ * - autobroadcast - DONE
+ * - commands - DONE
+ * - banlinks
+ * - emotelimit
+ * - repeatlimit
+ * TODO:
+ * Eventually move everything to event delegates maybe?
+ * Make a user class to help keep track of user warnings, levels, points (eventually), etc
+ * Move everything to a local database
+ * Clean up commands
+ *
+ */
