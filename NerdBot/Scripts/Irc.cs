@@ -245,12 +245,11 @@ namespace NerdBot
                 MySqlCommand cmd;
 
                 String sql = "SELECT * FROM users WHERE channel='" + _main.Channel.Substring(1) + "' AND username='" + user.ToLower() + "'";
-                Console.WriteLine(sql);
+
                 using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
                 {
                     using (MySqlDataReader r = cmd.ExecuteReader())
                     {
-                        Console.WriteLine("SQL");
                         if (!r.HasRows)
                         {
                             r.Close();
@@ -258,7 +257,7 @@ namespace NerdBot
                             SendMessage(_greeting.Replace("@user", user), QueuePriorty.High);
                             string date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString();
                             String insert = String.Format("INSERT INTO users (channel, username, last_greeted) VALUES (\"{0}\", \"{1}\", \"{2}\");", _main.Channel.Substring(1), user.ToLower(), date);
-                            Console.WriteLine(insert.ToString());
+
                             using (cmd2 = new MySqlCommand(insert, formMain.mainForm.db.myDB))
                             {
                                 cmd2.ExecuteNonQuery();
@@ -270,20 +269,18 @@ namespace NerdBot
                             {
                                 if (r["username"].ToString() == user.ToLower())
                                 {
-                                    Console.WriteLine("Found user");
                                     DateTime lastGreet = (DateTime)r["last_greeted"];
                                     if (lastGreet.AddDays(1) <= DateTime.Now.Date)
                                     {
                                         _logger.Log("Sending " + user + " a greeting", Logger.LogType.Debug);
 
-                                        Console.WriteLine("Greeting : " + user);
                                         SendMessage(_greeting.Replace("@user", user), QueuePriorty.High);
 
                                         r.Close();
                                         MySqlCommand cmd2;
                                         string date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString();
                                         String insert = String.Format("UPDATE users SET last_greeted=\"{0}\" WHERE channel=\"{1}\" AND username=\"{2}\";", date, _main.Channel.Substring(1), user.ToLower());
-                                        Console.WriteLine(insert.ToString());
+
                                         using (cmd2 = new MySqlCommand(insert, formMain.mainForm.db.myDB))
                                         {
                                             cmd2.ExecuteNonQuery();
@@ -457,7 +454,6 @@ namespace NerdBot
                     {
                         foreach (string chatter in chatterType)
                         {
-                            Console.WriteLine(chatter.ToString());
                             _users.Add(chatter);
                         }
                     }
@@ -473,7 +469,6 @@ namespace NerdBot
         private String GetUser(String message)
         {
             String[] temp = message.Split('!');
-            Console.WriteLine(temp.ToString());
             _user = temp[0].Substring(1);
             return CapName(_user);
         }
