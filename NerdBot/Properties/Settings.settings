@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="channel" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="banASCII" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -12,7 +12,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="oauthKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="followAlertOn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -33,19 +33,22 @@
       <Value Profile="(Default)">Welcome to the stream @user! Hope you enjoy watching and remember to follow the rules.</Value>
     </Setting>
     <Setting Name="databaseIP" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="databasePass" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="databaseUser" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="databaseTable" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="name" Type="System.String" Scope="User">
       <Value Profile="(Default)">Nerdbot9000</Value>
+    </Setting>
+    <Setting Name="followMessage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Thank you for following @name! Enjoy the stream!</Value>
     </Setting>
   </Settings>
 </SettingsFile>

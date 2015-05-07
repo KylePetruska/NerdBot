@@ -23,6 +23,8 @@ namespace NerdBot
         private formMain _main;
         private Logger _logger;
 
+        private string _followMsg;
+
         public Stats()
         {
             _logger = new Logger("Stats");
@@ -40,6 +42,8 @@ namespace NerdBot
 
         private void StatThread()
         {
+            _followMsg = Properties.Settings.Default.followMessage;
+
             _statsUpdateTimer = new Timer(GetStatUpdate, null, 0, 70000);
         }
 
@@ -103,7 +107,7 @@ namespace NerdBot
 
         private void SendFollowGreeting(string name)
         {
-            _main.chat.SendMessage("Thank you for following " + name + "! Enjoy the stream!", Irc.QueuePriorty.High);
+            _main.chat.SendMessage(_followMsg.Replace("@name", name), Irc.QueuePriorty.High);
         }
 
     }

@@ -25,7 +25,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Tuumn")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string channel {
             get {
                 return ((string)(this["channel"]));
@@ -61,7 +61,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("oauth:uzvqx4na8s00d6ir2lljpwx387e796")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string oauthKey {
             get {
                 return ((string)(this["oauthKey"]));
@@ -146,7 +146,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("www.radicalkoalagames.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string databaseIP {
             get {
                 return ((string)(this["databaseIP"]));
@@ -158,7 +158,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("$#if[)l@2pQZ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string databasePass {
             get {
                 return ((string)(this["databasePass"]));
@@ -170,7 +170,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NerdBot")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string databaseUser {
             get {
                 return ((string)(this["databaseUser"]));
@@ -182,7 +182,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NerdBot")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string databaseTable {
             get {
                 return ((string)(this["databaseTable"]));
@@ -201,6 +201,18 @@ namespace NerdBot.Properties {
             }
             set {
                 this["name"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Thank you for following @name! Enjoy the stream!")]
+        public string followMessage {
+            get {
+                return ((string)(this["followMessage"]));
+            }
+            set {
+                this["followMessage"] = value;
             }
         }
     }
