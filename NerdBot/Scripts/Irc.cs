@@ -528,7 +528,6 @@ namespace NerdBot
 
         public bool IsStreamOnline()
         {
-            return true;
             if (irc.Connected)
             {
                 using (var client = new WebClient())
