@@ -11,7 +11,7 @@ namespace NerdBot
     {
         public MySqlConnection myDB;
         private MySqlCommand _cmd;
-        private string _channel, _dbIp, _dbPass, _dbTable, _dbUser;
+        private string _channel, _dbIp, _dbPass, _dbName, _dbUser;
         private Logger _logger;
 
         public Database()
@@ -21,7 +21,7 @@ namespace NerdBot
             _channel = NerdBot.Properties.Settings.Default.channel;
             _dbIp = Properties.Settings.Default.databaseIP;
             _dbPass = Properties.Settings.Default.databasePass;
-            _dbTable = Properties.Settings.Default.databaseTable;
+            _dbName = Properties.Settings.Default.databaseName;
             _dbUser = Properties.Settings.Default.databaseUser;
             
             InitializeDB();
@@ -29,7 +29,8 @@ namespace NerdBot
 
         private void InitializeDB()
         {
-            myDB = new MySqlConnection("Server=" + _dbIp + ";Database=" + _dbTable + ";Uid=" + _dbUser + ";password=" + _dbPass + ";");
+            Console.WriteLine("Server=" + _dbIp + ";Database=" + _dbName + ";Uid=" + _dbUser + ";password=" + _dbPass + ";");
+            myDB = new MySqlConnection("Server=" + _dbIp + ";Database=" + _dbName + ";Uid=" + _dbUser + ";password=" + _dbPass + ";");
 
             try
             {

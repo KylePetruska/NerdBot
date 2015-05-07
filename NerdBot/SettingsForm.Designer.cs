@@ -42,7 +42,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxPass = new System.Windows.Forms.TextBox();
-            this.textBoxTable = new System.Windows.Forms.TextBox();
+            this.textBoxDBName = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -159,7 +159,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.textBoxPass);
-            this.groupBox2.Controls.Add(this.textBoxTable);
+            this.groupBox2.Controls.Add(this.textBoxDBName);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.textBoxIP);
@@ -181,12 +181,12 @@
             this.textBoxPass.TabIndex = 10;
             this.textBoxPass.UseSystemPasswordChar = true;
             // 
-            // textBoxTable
+            // textBoxDBName
             // 
-            this.textBoxTable.Location = new System.Drawing.Point(72, 98);
-            this.textBoxTable.Name = "textBoxTable";
-            this.textBoxTable.Size = new System.Drawing.Size(100, 20);
-            this.textBoxTable.TabIndex = 11;
+            this.textBoxDBName.Location = new System.Drawing.Point(72, 98);
+            this.textBoxDBName.Name = "textBoxDBName";
+            this.textBoxDBName.Size = new System.Drawing.Size(100, 20);
+            this.textBoxDBName.TabIndex = 11;
             // 
             // label6
             // 
@@ -202,11 +202,11 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(6, 101);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(37, 13);
+            this.label7.Size = new System.Drawing.Size(38, 13);
             this.label7.TabIndex = 13;
-            this.label7.Text = "Table:";
+            this.label7.Text = "Name:";
             // 
-            // Settings
+            // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -216,7 +216,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "Settings";
+            this.Name = "SettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.Settings_Load);
@@ -244,7 +244,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox textBoxPass;
-        private System.Windows.Forms.TextBox textBoxTable;
+        private System.Windows.Forms.TextBox textBoxDBName;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
     }

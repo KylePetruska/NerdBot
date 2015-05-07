@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="KyleChat.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NerdBot.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="channel" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Tuumn</Value>
     </Setting>
     <Setting Name="banASCII" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -36,13 +36,13 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="databasePass" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">$#if[)l@2pQZ</Value>
     </Setting>
     <Setting Name="databaseUser" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">NerdBot</Value>
     </Setting>
-    <Setting Name="databaseTable" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="databaseName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NerdBot</Value>
     </Setting>
     <Setting Name="name" Type="System.String" Scope="User">
       <Value Profile="(Default)">Nerdbot9000</Value>

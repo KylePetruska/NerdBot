@@ -25,7 +25,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Tuumn")]
         public string channel {
             get {
                 return ((string)(this["channel"]));
@@ -158,7 +158,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("$#if[)l@2pQZ")]
         public string databasePass {
             get {
                 return ((string)(this["databasePass"]));
@@ -170,7 +170,7 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NerdBot")]
         public string databaseUser {
             get {
                 return ((string)(this["databaseUser"]));
@@ -182,13 +182,13 @@ namespace NerdBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string databaseTable {
+        [global::System.Configuration.DefaultSettingValueAttribute("NerdBot")]
+        public string databaseName {
             get {
-                return ((string)(this["databaseTable"]));
+                return ((string)(this["databaseName"]));
             }
             set {
-                this["databaseTable"] = value;
+                this["databaseName"] = value;
             }
         }
         

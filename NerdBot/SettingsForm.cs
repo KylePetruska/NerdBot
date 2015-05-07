@@ -23,7 +23,7 @@ namespace NerdBot
             textBoxOAuth.Text = Properties.Settings.Default.oauthKey;
             textBoxIP.Text = Properties.Settings.Default.databaseIP;
             textBoxPass.Text = Properties.Settings.Default.databasePass;
-            textBoxTable.Text = Properties.Settings.Default.databaseTable;
+            textBoxDBName.Text = Properties.Settings.Default.databaseName;
             textBoxUser.Text = Properties.Settings.Default.databaseUser;
         }
 
@@ -40,7 +40,7 @@ namespace NerdBot
             Properties.Settings.Default.oauthKey = textBoxOAuth.Text;
             Properties.Settings.Default.databaseIP = textBoxIP.Text;
             Properties.Settings.Default.databasePass = textBoxPass.Text;
-            Properties.Settings.Default.databaseTable = textBoxTable.Text;
+            Properties.Settings.Default.databaseName = textBoxDBName.Text;
             Properties.Settings.Default.databaseUser = textBoxUser.Text;
 
             Properties.Settings.Default.Save();
