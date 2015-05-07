@@ -17,7 +17,7 @@ namespace NerdBot
 {
     public class Irc
     {
-        private String _nick, _admin, _user, _greeting, _oauth = "";
+        private String _nick, _admin, _user, _oauth = "";
 
         public TcpClient irc;
 
@@ -39,17 +39,9 @@ namespace NerdBot
         private Commands _commands;
         private AutoBroadcast _autoBroadcast;
         private Logger _logger;
+        private Greeting _greeting;
 
         private formMain _main;
-
-        private JoinGreetFrequency joinGreetFrequency { get; set; }
-
-        public enum JoinGreetFrequency
-        {
-            Everytime,
-            Daily,
-            Once
-        }
 
         public enum QueuePriorty
         {
@@ -67,10 +59,9 @@ namespace NerdBot
 
             _nick = Properties.Settings.Default.name.ToLower();
             _oauth = Properties.Settings.Default.oauthKey;
-            _greeting = Properties.Settings.Default.joinGreeting;
-            joinGreetFrequency = (JoinGreetFrequency)Properties.Settings.Default.joinGreetFrequency;
 
-            _commands = new Commands(_main.Channel);
+            _commands = new Commands(_main.Channel.Substring(1));
+            _greeting = new Greeting(this);
 
             Connect();
         }
@@ -214,85 +205,17 @@ namespace NerdBot
 
                 _logger.Log(_user + " joined", Logger.LogType.Debug);
 
-                if (_user.ToLower() == Admin.ToLower())
+                /*if (_user.ToLower() == Admin.ToLower())
                     return;
                 if (_user.ToLower() == _nick.ToLower())
-                    return;
+                    return;*/
 
-                if (_user.ToLower() != Admin.ToLower() || _user.ToLower() != _nick.ToLower())
-                {
-                    SendGreeting(_user);
-                }
+                _greeting.HandleGreeting(_user);
             }
             else if (msg[1].Equals("PART"))
             {
                 RemoveUserFromList(CapName(GetUser(message)));
                 _logger.Log(_user + " left", Logger.LogType.Debug);
-            }
-        }
-
-        private void SendGreeting(String user)
-        {
-
-            if (joinGreetFrequency == JoinGreetFrequency.Everytime)
-            {
-                _logger.Log("Sending " + user + " a greeting", Logger.LogType.Debug);
-                SendMessage(_greeting.Replace("@user", user), QueuePriorty.High);
-                return;
-            }
-            else
-            {
-                MySqlCommand cmd;
-
-                String sql = "SELECT * FROM users WHERE channel='" + _main.Channel.Substring(1) + "' AND username='" + user.ToLower() + "'";
-
-                using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
-                {
-                    using (MySqlDataReader r = cmd.ExecuteReader())
-                    {
-                        if (!r.HasRows)
-                        {
-                            r.Close();
-                            MySqlCommand cmd2;
-                            SendMessage(_greeting.Replace("@user", user), QueuePriorty.High);
-                            string date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString();
-                            String insert = String.Format("INSERT INTO users (channel, username, last_greeted) VALUES (\"{0}\", \"{1}\", \"{2}\");", _main.Channel.Substring(1), user.ToLower(), date);
-
-                            using (cmd2 = new MySqlCommand(insert, formMain.mainForm.db.myDB))
-                            {
-                                cmd2.ExecuteNonQuery();
-                            }
-                        }
-                        else
-                        {
-                            while (r.Read())
-                            {
-                                if (r["username"].ToString() == user.ToLower())
-                                {
-                                    DateTime lastGreet = (DateTime)r["last_greeted"];
-                                    if (lastGreet.AddDays(1) <= DateTime.Now.Date)
-                                    {
-                                        _logger.Log("Sending " + user + " a greeting", Logger.LogType.Debug);
-
-                                        SendMessage(_greeting.Replace("@user", user), QueuePriorty.High);
-
-                                        r.Close();
-                                        MySqlCommand cmd2;
-                                        string date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString();
-                                        String insert = String.Format("UPDATE users SET last_greeted=\"{0}\" WHERE channel=\"{1}\" AND username=\"{2}\";", date, _main.Channel.Substring(1), user.ToLower());
-
-                                        using (cmd2 = new MySqlCommand(insert, formMain.mainForm.db.myDB))
-                                        {
-                                            cmd2.ExecuteNonQuery();
-                                        }
-                                        break;
-                                    }
-                                    return;
-                                }
-                            }
-                        }   
-                    }
-                }
             }
         }
 
@@ -523,6 +446,7 @@ namespace NerdBot
 
         public bool IsStreamOnline()
         {
+            return true;
             if (irc.Connected)
             {
                 using (var client = new WebClient())
