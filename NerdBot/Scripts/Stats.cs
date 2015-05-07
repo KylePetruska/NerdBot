@@ -77,7 +77,6 @@ namespace NerdBot
 
         private void UpdateNewFollowers()
         {
-            // {"follows":[{"created_at":"2014-06-11T00:37:48Z","_links":{"self":"https://api.twitch.tv/kraken/users/cptncinnamon/follows/channels/tuumn"},"notifications":true,"user":{"_id":55809053,"name":"cptncinnamon","created_at":"2014-01-30T05:19:20Z","updated_at":"2015-03-28T03:28:48Z","_links":{"self":"https://api.twitch.tv/kraken/users/cptncinnamon"},"display_name":"cptncinnamon","logo":null,"bio":null,"type":"user"}}],"_total":8,"_links":{"self":"https://api.twitch.tv/kraken/channels/tuumn/follows?direction=DESC&limit=1&offset=8","next":"https://api.twitch.tv/kraken/channels/tuumn/follows?direction=DESC&limit=1&offset=9","prev":"https://api.twitch.tv/kraken/channels/tuumn/follows?direction=DESC&limit=1&offset=7"}}
             using (var client = new WebClient())
             {
                 string result = client.DownloadString("https://api.twitch.tv/kraken/channels/" + _main.Channel.Substring(1) + "/follows?direction=ASC&limit=100&offset=" + _followerOffset);

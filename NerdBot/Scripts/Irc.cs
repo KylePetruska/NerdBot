@@ -567,7 +567,7 @@ namespace NerdBot
             if (IsStreamOnline())
             {
                 String message;
-                //:tuumn!tuumn@tuumn.tmi.twitch.tv PRIVMSG #tuumn :Test
+
                 if (_highPriority.TryDequeue(out message))
                 {
                     rawmsg += message;
@@ -598,7 +598,7 @@ namespace NerdBot
         {
             using (var client = new WebClient())
             {
-                string result = client.DownloadString("http://tmi.twitch.tv/group/user/tuumn/chatters");
+                string result = client.DownloadString("http://tmi.twitch.tv/group/user/" + _main.Channel.Substring(1) + "/chatters");
                 JObject parsedData = JObject.Parse(result);
                 foreach (string mod in parsedData["chatters"]["moderators"])
                 {
