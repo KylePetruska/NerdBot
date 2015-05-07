@@ -104,26 +104,32 @@ namespace NerdBot
 
             //Connect to DB
             db = new Database();
+
             //Connect to IRC
-            chat = new Irc();
+            if (db.myDB.State == ConnectionState.Open)
+            {
+                chat = new Irc();
+            }
+            else
+            {
+                labelStatusState.Text = "DB Error";
+                labelStatusState.ForeColor = Color.Red;
+                return;
+            }
 
             if (!chat.irc.Connected)
             {
-                labelStatusState.Text = "Could not connect to Twitch IRC";
+                labelStatusState.Text = "IRC Error";
                 labelStatusState.ForeColor = Color.Red;
 
                 if (db != null)
+                {
+                    db.myDB.Close();
                     db = null;
+                }
             }
-            else if (db.myDB.State != ConnectionState.Open)
-            {
-                labelStatusState.Text = "Could not connect to DB";
-                labelStatusState.ForeColor = Color.Red;
-
-                if (chat != null)
-                    chat = null;
-            }
-            else
+            
+            if (chat.irc.Connected && db.myDB.State == ConnectionState.Open)
             {
                 labelStatusState.Text = "Connected";
                 labelStatusState.ForeColor = Color.Green;
