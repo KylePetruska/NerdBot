@@ -8,14 +8,10 @@ using System.Collections.Generic;
 
 namespace NerdBot
 {
-    public interface ICommands
-    {
-        
-    }
 
-    public class Commands : ICommands
+    public class Commands
     {
-        private MySqlCommand cmd;
+        private MySqlCommand _cmd;
 
         public string[,] custCmds = new string[20,3];
 
@@ -33,9 +29,9 @@ namespace NerdBot
 
             int cmdNum = 0;
             String sql = "SELECT * FROM commands WHERE channel='" + _channel + "'";
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                using (MySqlDataReader r = cmd.ExecuteReader())
+                using (MySqlDataReader r = _cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
@@ -51,9 +47,9 @@ namespace NerdBot
         public bool CmdExists(String command)
         {
             String sql = "SELECT * FROM commands";
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                using (MySqlDataReader r = cmd.ExecuteReader())
+                using (MySqlDataReader r = _cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
@@ -70,10 +66,10 @@ namespace NerdBot
         public void AddCommand(String command, int level, String output)
         {
             String sql = String.Format("INSERT INTO commands (command, level, output) VALUES (\"{0}\", {1}, \"{2}\");", command, level, output);
-            //String sql = "INSERT INTO commands (command, level, output) VALUES (\"" + command + "\", " + level + ", \"" + output + "\");";
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                cmd.ExecuteNonQuery();
+                _cmd.ExecuteNonQuery();
             }
             InitializeCustomCommands();
         }
@@ -81,9 +77,9 @@ namespace NerdBot
         public void RemoveCommand(String command)
         {
             String sql = "DELETE FROM commands WHERE command= \"" + command + "\";";
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                cmd.ExecuteNonQuery();
+                _cmd.ExecuteNonQuery();
             }
             InitializeCustomCommands();
         }
@@ -91,9 +87,9 @@ namespace NerdBot
         public int LevelRequired(String command)
         {
             String sql = String.Format("SELECT * FROM commands WHERE command = \"{0}\";", command);
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                using (MySqlDataReader r = cmd.ExecuteReader())
+                using (MySqlDataReader r = _cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
@@ -108,9 +104,9 @@ namespace NerdBot
         {
             StringBuilder list = new StringBuilder();
             String sql = "SELECT * FROM commands WHERE channel='" + _channel + "'";
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                using (MySqlDataReader r = cmd.ExecuteReader())
+                using (MySqlDataReader r = _cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
@@ -125,9 +121,9 @@ namespace NerdBot
         public string GetOutput(String command)
         {
             String sql = "SELECT * FROM commands WHERE command = \"" + command + "\";";
-            using (cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
+            using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
-                using (MySqlDataReader r = cmd.ExecuteReader())
+                using (MySqlDataReader r = _cmd.ExecuteReader())
                 {
                     while (r.Read())
                     {
