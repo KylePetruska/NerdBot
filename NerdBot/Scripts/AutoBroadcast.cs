@@ -54,7 +54,7 @@ namespace NerdBot
         private void LoadMessages()
         {
             _messages = new List<string>();
-            String sql = "SELECT * FROM autobroadcast WHERE channel='" + formMain.mainForm.Channel + "'";
+            String sql = "SELECT * FROM autobroadcast WHERE channel='" + formMain.mainForm.Channel.Substring(1) + "'";
             using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
                 using (MySqlDataReader r = _cmd.ExecuteReader())
@@ -69,7 +69,7 @@ namespace NerdBot
 
         public void AddMessage(string message)
         {
-            String sql = String.Format("INSERT INTO autobroadcast (channel, message) VALUES (\"{0}\", \"{1}\");", formMain.mainForm.Channel, message);
+            String sql = String.Format("INSERT INTO autobroadcast (channel, message) VALUES (\"{0}\", \"{1}\");", formMain.mainForm.Channel.Substring(1), message);
             Console.WriteLine(sql);
             using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
@@ -80,7 +80,7 @@ namespace NerdBot
 
         public void RemoveMessage(string message)
         {
-            String sql = String.Format("DELETE FROM autobroadcast WHERE channel= \'{0}\' AND message=\'{1}\';", formMain.mainForm.Channel, message);
+            String sql = String.Format("DELETE FROM autobroadcast WHERE channel= \'{0}\' AND message=\'{1}\';", formMain.mainForm.Channel.Substring(1), message);
             Console.WriteLine(sql);
             using (_cmd = new MySqlCommand(sql, formMain.mainForm.db.myDB))
             {
