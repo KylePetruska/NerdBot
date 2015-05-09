@@ -18,14 +18,14 @@ namespace NerdBot
     public class Irc
     {
         private String _nick, _admin, _user, _oauth = "";
+        private bool testMode = true;
 
         public TcpClient irc;
 
         private StreamReader _read;
         private StreamWriter _write;
 
-        private List<string> _users = new List<string>();
-        private List<string> _modList = new List<string>();
+        private List<Users> _users = new List<Users>();
 
         private ConcurrentQueue<string> _highPriority = new ConcurrentQueue<string>();
         private ConcurrentQueue<string> _normalPriority = new ConcurrentQueue<string>();
@@ -42,6 +42,10 @@ namespace NerdBot
         private Greeting _greeting;
 
         private formMain _main;
+
+        private string[] emoteDelim = 
+        { ":)", ":(", ":P", ";)", "Kappa", ":o", ":z", "B)", ":\\", ";p", ":p", 
+          "R)", "o_O", ":D", ">(", "<3", "KappaHD", "MiniK", "duDudu", "riPepperonis" };
 
         public enum QueuePriorty
         {
@@ -126,8 +130,7 @@ namespace NerdBot
             {
                 _logger.Log("IRC is connected. Starting Threads and other what-nots", Logger.LogType.Debug);
                 StartThreads();
-                BuildUserList();
-                GetMods();
+                //BuildUserList();
                 SendMessage("Nerdbot9000 is now online! Hello fellow nerds!", QueuePriorty.Low);
             }
         }
@@ -140,7 +143,7 @@ namespace NerdBot
             _keepAlive = new Thread(new ThreadStart(KeepAlive));
             _keepAlive.Start();
 
-            _messageQueue = new Timer(HandleMessageQueue, null, 0, 3000);
+            _messageQueue = new Timer(HandleMessageQueue, null, 0, 1000);
 
             _autoBroadcast = new AutoBroadcast(this, Properties.Settings.Default.autoBroadcastInterval);
 
@@ -181,8 +184,6 @@ namespace NerdBot
 
         private void ParseMessage(String message)
         {
-            _logger.Log("Parsing Message", Logger.LogType.Debug);
-           
             String[] msg = message.Split(' ');
 
             if (msg[0].Equals("PING"))
@@ -193,7 +194,7 @@ namespace NerdBot
             else if (msg[1].Equals("PRIVMSG"))
             {
                 _user = CapName(GetUser(message));
-                AddUserToList(_user);
+                AddUser(_user);
                 String temp = message.Substring(message.IndexOf(":", 1) + 1);
                 _logger.Log(_user + " sent a message", Logger.LogType.Debug);
                 HandleMessage(temp, _user);
@@ -201,21 +202,45 @@ namespace NerdBot
             else if (msg[1].Equals("JOIN"))
             {
                 _user = CapName(GetUser(message));
-                AddUserToList(_user);
+                AddUser(_user);
 
                 _logger.Log(_user + " joined", Logger.LogType.Debug);
 
-                /*if (_user.ToLower() == Admin.ToLower())
+                if (_user.ToLower() == Admin.ToLower())
                     return;
                 if (_user.ToLower() == _nick.ToLower())
-                    return;*/
+                    return;
 
                 _greeting.HandleGreeting(_user);
             }
             else if (msg[1].Equals("PART"))
             {
-                RemoveUserFromList(CapName(GetUser(message)));
+                RemoveUser(GetUserFromList(CapName(GetUser(message))));
                 _logger.Log(_user + " left", Logger.LogType.Debug);
+            }
+            else if (msg[1].Equals("MODE")) //:jtv MODE #tuumn +o tuumn
+            {
+                Users user = GetUserFromList(msg[4]);
+
+                if (user == null)
+                {
+                    _logger.Log("User was null when getting mode change", Logger.LogType.Error);
+                    return;
+                }
+
+                if (msg[3].Equals("+o"))
+                {
+                    if (user.UserLevel < 2)
+                    {
+                        _logger.Log("User " + user.Name + " was promoted to a moderator.", Logger.LogType.Debug);
+                        user.SetUserLevel(2);
+                    }
+                }
+                else if (msg[3].Equals("-o"))
+                {
+                    _logger.Log("User " + user.Name + " was demoted to regular user.", Logger.LogType.Debug);
+                    user.SetUserLevel(0);
+                }
             }
         }
 
@@ -225,28 +250,52 @@ namespace NerdBot
             char[] delim = space.ToCharArray();
             String[] msg = message.Split(delim, 2);
 
+            Users testUser = GetUserFromList(user);
+
+            if (testUser == null)
+            {
+                _logger.Log("User was null when handling message", Logger.LogType.Error);
+                return;
+            }
+
+            if (testUser.UserLevel == 0)
+            {
+                if (testUser.LastMessageTime.AddSeconds(10) >= DateTime.Now)
+                {
+                    if (message == testUser.LastMessage)
+                    {
+                        testUser.Warn(Users.WarnType.Spam);
+                        return;
+                    }
+                }
+            }
+
+            testUser.LastMessage = message;
+            testUser.LastMessageTime = DateTime.Now;
+
             if (_main.BanLinks)
             {
-                if (ContainsLink(message))
+                if (testUser.UserLevel == 0)
                 {
-                    if (!IsMod(user))
+                    if (ContainsLink(message))
                     {
-                        SendMessage("Hey " + user + ", no links! [warning]", QueuePriorty.Normal);
-                        SendMessage("/timeout " + user + " 30", QueuePriorty.High);
+                        testUser.Warn(Users.WarnType.Link);
+                        return;
                     }
                 }
             }
 
             if (_main.EmoteLimit)
             {
-                string[] emoteDelim = {":)", ":(", ":P", ";)", "Kappa"};
-
-                String[] emote = message.Split(emoteDelim, StringSplitOptions.None);
-
-                if (emote.Length >= 5)
+                if (testUser.UserLevel == 0)
                 {
-                    SendMessage("Hey " + user + ", chill out on the emote spam! [warning]", QueuePriorty.Normal);
-                    SendMessage("/timeout " + user + " 30", QueuePriorty.High);
+                    String[] emote = message.Split(emoteDelim, StringSplitOptions.None);
+
+                    if (emote.Length >= 5)//TODO: Make this configurable
+                    {
+                        testUser.Warn(Users.WarnType.EmoteSpam);
+                        return;
+                    }
                 }
             }
 
@@ -255,31 +304,28 @@ namespace NerdBot
 
                 if (msg.Length == 2)
                 {
-                    String[] cmd = msg[1].Split(delim, 3);
+                    String[] cmd = msg[1].Split(delim, 5);
 
-                    if (IsMod(user))
+                    if (testUser.UserLevel >= 2)
                     {
+                        //New add command format: !commands add [!command] [level] [output]
                         if (cmd[0].Equals("add"))
                         {
-                            SendMessage("Adding command: " + cmd[1] + " Output: " + cmd[2], QueuePriorty.Low);
-                            _commands.AddCommand(cmd[0], 1, cmd[2]);
+                            SendMessage("Adding command: " + cmd[1] + " Level: " + cmd[2] + " Output: " + cmd[3], QueuePriorty.Low);
+                            _commands.AddCommand(cmd[1], Convert.ToInt16(cmd[2]), cmd[2]);
                         }
                         else if (cmd[0].Equals("remove"))
                         {
                             if (_commands.CmdExists(cmd[0]))
                             {
                                 SendMessage("Removing command: " + cmd[1], QueuePriorty.Low);
-                                _commands.RemoveCommand(cmd[0]);
+                                _commands.RemoveCommand(cmd[1]);
                             }
                             else
                             {
                                 SendMessage("Command not found. Could not removed.", QueuePriorty.Low);
                             }
                         }
-                    }
-                    else
-                    {
-                        SendMessage("You do not have permission to do that", QueuePriorty.Low);
                     }
                 }
                 else
@@ -292,7 +338,7 @@ namespace NerdBot
             {
                 String[] cmd = msg[1].Split(delim, 2);
 
-                if (IsMod(user))
+                if (testUser.UserLevel >= 2)
                 {
                     if (cmd[0].Equals("add"))
                     {
@@ -343,24 +389,27 @@ namespace NerdBot
             return false;
         }
 
-        private void AddUserToList(String nick)
+        public void AddUser(string name)
         {
+            if (name == "jtv")
+                return;
+
             lock (_users)
             {
-                if (!_users.Contains(nick))
+                if (GetUserFromList(name) == null)
                 {
-                    _users.Add(nick);
+                    _users.Add(new Users(name));
                 }
             }
         }
 
-        private void RemoveUserFromList(String nick)
+        private void RemoveUser(Users name)
         {
             lock (_users)
             {
-                if (_users.Contains(nick))
+                if (_users.Contains(name))
                 {
-                    _users.Remove(nick);
+                    _users.Remove(name);
                 }
             }
         }
@@ -369,15 +418,16 @@ namespace NerdBot
         {
             using (var client = new WebClient())
             {
-                string result = client.DownloadString("http://tmi.twitch.tv/group/user/tuumn/chatters");
+                string result = client.DownloadString("http://tmi.twitch.tv/group/user/" + formMain.mainForm.Channel.Substring(1) + "/chatters");
                 JObject parsedData = JObject.Parse(result);
+                Console.WriteLine(result);
                 foreach (JProperty chatters in parsedData["chatters"])
                 {
                     foreach (JArray chatterType in chatters)
                     {
                         foreach (string chatter in chatterType)
                         {
-                            _users.Add(chatter);
+                            AddUser(chatter);
                         }
                     }
                 }
@@ -446,7 +496,9 @@ namespace NerdBot
 
         public bool IsStreamOnline()
         {
-            return true;
+            if (testMode)
+                return true;
+
             if (irc.Connected)
             {
                 using (var client = new WebClient())
@@ -513,29 +565,6 @@ namespace NerdBot
             }
         }
 
-        public void GetMods()
-        {
-            using (var client = new WebClient())
-            {
-                string result = client.DownloadString("http://tmi.twitch.tv/group/user/" + _main.Channel.Substring(1) + "/chatters");
-                JObject parsedData = JObject.Parse(result);
-                foreach (string mod in parsedData["chatters"]["moderators"])
-                {
-                    _modList.Add(mod);
-                }
-            }
-        }
-
-        public bool IsMod(string user)
-        {
-            foreach (string mod in _modList)
-            {
-                if (user.ToUpper() == mod.ToUpper())
-                    return true;
-            }
-            return false;
-        }
-
         private TimeSpan GetUptime()
         {
             if (irc.Connected)
@@ -575,6 +604,18 @@ namespace NerdBot
         public void ChangeAutoBroadcastInterval(int interval)
         {
             _autoBroadcast.ChangeInterval(interval);
+        }
+
+        private Users GetUserFromList(string name)
+        {
+            foreach (Users user in _users)
+            {
+                if (user.Name.ToLower() == name.ToLower())
+                {
+                    return user;
+                }
+            }
+            return null;
         }
     }
 }
