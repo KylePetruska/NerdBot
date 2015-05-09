@@ -244,42 +244,42 @@ namespace NerdBot
             }
         }
 
-        private void HandleMessage(String message, String user)
+        private void HandleMessage(String message, String name)
         {
             string space = " ";
             char[] delim = space.ToCharArray();
             String[] msg = message.Split(delim, 2);
 
-            Users testUser = GetUserFromList(user);
+            Users user = GetUserFromList(name);
 
-            if (testUser == null)
+            if (user == null)
             {
                 _logger.Log("User was null when handling message", Logger.LogType.Error);
                 return;
             }
 
-            if (testUser.UserLevel == 0)
+            if (user.UserLevel == 0)
             {
-                if (testUser.LastMessageTime.AddSeconds(10) >= DateTime.Now)
+                if (user.LastMessageTime.AddSeconds(10) >= DateTime.Now)
                 {
-                    if (message == testUser.LastMessage)
+                    if (message == user.LastMessage)
                     {
-                        testUser.Warn(Users.WarnType.Spam);
+                        user.Warn(Users.WarnType.Spam);
                         return;
                     }
                 }
             }
 
-            testUser.LastMessage = message;
-            testUser.LastMessageTime = DateTime.Now;
+            user.LastMessage = message;
+            user.LastMessageTime = DateTime.Now;
 
             if (_main.BanLinks)
             {
-                if (testUser.UserLevel == 0)
+                if (user.UserLevel == 0)
                 {
                     if (ContainsLink(message))
                     {
-                        testUser.Warn(Users.WarnType.Link);
+                        user.Warn(Users.WarnType.Link);
                         return;
                     }
                 }
@@ -287,13 +287,13 @@ namespace NerdBot
 
             if (_main.EmoteLimit)
             {
-                if (testUser.UserLevel == 0)
+                if (user.UserLevel == 0)
                 {
                     String[] emote = message.Split(emoteDelim, StringSplitOptions.None);
 
                     if (emote.Length >= 5)//TODO: Make this configurable
                     {
-                        testUser.Warn(Users.WarnType.EmoteSpam);
+                        user.Warn(Users.WarnType.EmoteSpam);
                         return;
                     }
                 }
@@ -306,7 +306,7 @@ namespace NerdBot
                 {
                     String[] cmd = msg[1].Split(delim, 5);
 
-                    if (testUser.UserLevel >= 2)
+                    if (user.UserLevel >= 2)
                     {
                         //New add command format: !commands add [!command] [level] [output]
                         if (cmd[0].Equals("add"))
@@ -338,7 +338,7 @@ namespace NerdBot
             {
                 String[] cmd = msg[1].Split(delim, 2);
 
-                if (testUser.UserLevel >= 2)
+                if (user.UserLevel >= 2)
                 {
                     if (cmd[0].Equals("add"))
                     {
