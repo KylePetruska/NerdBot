@@ -193,7 +193,7 @@ namespace NerdBot
                     warnMsg = " no links in chat please.";
                     break;
                 case WarnType.EmoteSpam:
-                    warnMsg = " please do not spawn emotes.";
+                    warnMsg = " please do not spam emotes.";
                     break;
                 case WarnType.Spam:
                     warnMsg = ", what is this a Monty Python skit. Cut the spam out.";
